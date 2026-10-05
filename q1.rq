@@ -1,0 +1,21 @@
+# Q1. Стадіони (Q483110) у Польщі (Q36) з місткістю (P1083) > 10000 + офіційний сайт
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd: <http://www.bigdata.com/rdf#>
+
+SELECT ?item ?itemLabel ?value ?website WHERE {
+  {
+    SELECT ?item (MAX(?v) AS ?value) (SAMPLE(?w) AS ?website) WHERE {
+      ?item wdt:P31 wd:Q483110 ;
+            wdt:P17 wd:Q36 ;
+            wdt:P1083 ?v .
+      OPTIONAL { ?item wdt:P856 ?w . }
+    }
+    GROUP BY ?item
+  }
+  FILTER(?value > 10000)
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+ORDER BY DESC(?value) ?item
+LIMIT 20

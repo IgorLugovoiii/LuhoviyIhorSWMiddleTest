@@ -1,0 +1,20 @@
+# Q3. Стадіони (Q483110) у Польщі (Q36) та населення (P1082) їхнього регіону (P131)
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd: <http://www.bigdata.com/rdf#>
+
+SELECT ?item ?itemLabel ?region ?regionLabel ?population WHERE {
+  {
+    SELECT ?item ?region (MAX(?p) AS ?population) WHERE {
+      ?item wdt:P31 wd:Q483110 ;
+            wdt:P17 wd:Q36 ;
+            wdt:P131 ?region .
+      ?region wdt:P1082 ?p .
+    }
+    GROUP BY ?item ?region
+  }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+ORDER BY DESC(?population) ?item
+LIMIT 10
